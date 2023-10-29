@@ -8,7 +8,7 @@ const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
 import {lang} from '../devdata/constants/languages';
 
-class Clock extends Component {
+class WorldClock extends Component {
   constructor(props) {
     super(props);
 
@@ -49,7 +49,6 @@ class Clock extends Component {
     this.rotateClockHand(this.minuteRotation, minutes);
     this.rotateClockHand(this.hourRotation, hours);
 
-    // Get the day of the week and month
     const dayName = new Intl.DateTimeFormat(lang[this.i].code, {
       weekday: 'short',
     }).format(now);
@@ -162,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Clock;
+export default WorldClock;

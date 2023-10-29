@@ -5,3 +5,4 @@ export {default as Langsel} from './langselector';
 export {default as Sidemenu} from './sidemenu';
 export {default as Cmodal} from './custommodal';
 export {default as Clock} from './clock';
+export {default as WorldClock} from './worldclock';

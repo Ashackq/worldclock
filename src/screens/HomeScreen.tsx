@@ -2,7 +2,7 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 
-import {Clock, Head} from '../components';
+import {Clock, Head, WorldClock} from '../components';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
@@ -50,8 +50,9 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       <View style={styles.head}>
         <Head name={lang[i].appname} navigation={navigation} route={route} />
       </View>
-      <View>
+      <View style={styles.clocks}>
         <Clock i={i} />
+        <WorldClock i={i} />
       </View>
     </View>
   );
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   clocks: {
+    marginTop: 50,
     alignItems: 'flex-start',
   },
 });
