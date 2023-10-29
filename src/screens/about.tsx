@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
+/* eslint-disable prettier/prettier */
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-import { Head } from '../components';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../App';
-import { lang } from '../devdata/constants/languages';
-import { env } from '../devdata/constants/lang';
+import {Head} from '../components';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
+import {lang} from '../devdata/constants/languages';
+import {env} from '../devdata/constants/lang';
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'About'>;
 
-const About = ({ navigation, route }: HomeProps) => {
+const About = ({navigation, route}: HomeProps) => {
   const i = route.params.languageindex;
   return (
     <View style={styles.cont}>
@@ -61,5 +62,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  text: { color: 'white' },
+  text: {color: 'white'},
 });

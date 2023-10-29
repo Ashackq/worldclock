@@ -26,7 +26,7 @@ export const lang = [
     setzone: 'Set Zone',
     thiscity: "This city does not 'observe' / 'is not currently observing' DST",
     nextdst: 'Next DST transition for this city occurs at your local time:',
-    local: 'local',
+    local: 'Local',
   },
   {appname: 'World Clocks/Time Convertor'},
   {appname: 'World Clocks/Time Convertor'},

@@ -27,9 +27,7 @@ export type RootStackParamList = {
   Tnc: {
     languageindex: number;
   };
-  Loading: {
-    languageindex: number;
-  };
+  Loading: undefined;
 };
 const initialRouteParams = {
   languageindex: 0,
