@@ -1,12 +1,20 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {View, Image, StyleSheet, Animated, Easing, Text} from 'react-native';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Animated,
+  Easing,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import {lang} from '../devdata/constants/languages';
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
 const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
-import {lang} from '../devdata/constants/languages';
 
 class WorldClock extends Component {
   constructor(props) {
@@ -16,6 +24,12 @@ class WorldClock extends Component {
     this.minuteRotation = new Animated.Value(0);
     this.secondRotation = new Animated.Value(0);
     this.i = this.props.i;
+
+    this.state = {
+      dayName: '',
+      analogTime: '',
+      date: '',
+    };
 
     this.updateClock = this.updateClock.bind(this);
     this.prevSeconds = -1;
@@ -35,15 +49,15 @@ class WorldClock extends Component {
   }
 
   updateClock() {
-    const now = new Date();
-    const seconds = now.getSeconds() * 6;
+    const now = new Date(); // Get the current UTC time
+    const seconds = now.getUTCSeconds() * 6;
     if (seconds === 0 && this.prevSeconds !== 0) {
       this.resetSecondHandRotation();
     }
     this.prevSeconds = seconds;
 
-    const minutes = (now.getMinutes() + now.getSeconds() / 60) * 6;
-    const hours = ((now.getHours() % 12) + now.getMinutes() / 60) * 30;
+    const minutes = (now.getUTCMinutes() + now.getUTCSeconds() / 60) * 6;
+    const hours = ((now.getUTCHours() % 12) + now.getUTCMinutes() / 60) * 30;
 
     this.rotateClockHand(this.secondRotation, seconds);
     this.rotateClockHand(this.minuteRotation, minutes);
@@ -52,13 +66,23 @@ class WorldClock extends Component {
     const dayName = new Intl.DateTimeFormat(lang[this.i].code, {
       weekday: 'short',
     }).format(now);
-    const monthName = new Intl.DateTimeFormat(lang[this.i].code, {
+
+    const analogTime = `${now.getUTCHours().toString().padStart(2, '0')}:${now
+      .getUTCMinutes()
+      .toString()
+      .padStart(2, '0')}`;
+
+    // const date = now.toISOString('en-US').split('T')[0];
+    const date = now.toLocaleDateString('en-US', {
+      year: 'numeric',
       month: 'short',
-    }).format(now);
+      day: 'numeric',
+    });
 
     this.setState({
       dayName: dayName,
-      monthName: monthName,
+      analogTime: analogTime,
+      date: date,
     });
   }
 
@@ -87,20 +111,6 @@ class WorldClock extends Component {
       outputRange: ['0deg', '360deg'],
     });
 
-    const now = new Date();
-    const dayName = new Intl.DateTimeFormat(lang[this.i].code, {
-      weekday: 'short',
-    }).format(now);
-    const analogTime = now.toLocaleTimeString(lang[this.i].code, {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    const date = now.toLocaleDateString(lang[this.i].code, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-
     return (
       <View style={styles.container}>
         <Image source={Clockback} style={styles.img2} />
@@ -121,9 +131,9 @@ class WorldClock extends Component {
         />
         <View style={styles.detailscont}>
           <Text style={styles.label}>
-            {dayName}, {analogTime}
+            {this.state.dayName}, {this.state.analogTime}
           </Text>
-          <Text style={styles.label}>{date}</Text>
+          <Text style={styles.label}>{this.state.date}</Text>
         </View>
       </View>
     );

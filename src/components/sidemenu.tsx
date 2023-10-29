@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
   Image,
   Share as Give,
 } from 'react-native';
-import { lang } from '../devdata/constants/languages';
-import { env, colors } from '../devdata/constants/lang';
+import {lang} from '../devdata/constants/languages';
+import {env, colors} from '../devdata/constants/lang';
 
 const Set = require('../devdata/assets/edit.jpg');
 const Help = require('../devdata/assets/help.png');
@@ -21,7 +21,7 @@ const Share = require('../devdata/assets/share.png');
 const Moreapps = require('../devdata/assets/moreapps.png');
 const Appspolicy = require('../devdata/assets/appspolicy.png');
 
-const SideMenu = ({ toggleSideMenu, isMenuOpen, navigation, route }) => {
+const SideMenu = ({toggleSideMenu, isMenuOpen, navigation, route}) => {
   const [slideAnim] = useState(new Animated.Value(-300));
   const totalcount = route.params.totalcount;
   const beadcount = route.params.beadcount;
@@ -37,9 +37,7 @@ const SideMenu = ({ toggleSideMenu, isMenuOpen, navigation, route }) => {
     toggleSideMenu();
 
     let targetRoute = '';
-    if (iconName === 'Edit') {
-      targetRoute = 'Edit';
-    } else if (iconName === 'Help') {
+    if (iconName === 'Help') {
       targetRoute = 'Help';
     } else if (iconName === 'Tnc') {
       targetRoute = 'Tnc';
@@ -105,7 +103,7 @@ const SideMenu = ({ toggleSideMenu, isMenuOpen, navigation, route }) => {
   };
 
   return (
-    <Animated.View style={{ transform: [{ translateX: slideAnim }] }}>
+    <Animated.View style={{transform: [{translateX: slideAnim}]}}>
       <TouchableOpacity onPress={toggleSideMenu} activeOpacity={1}>
         <View style={styles.sideMenu}>
           <Text style={styles.alertTitle}>{lang[i].appname}</Text>
@@ -113,24 +111,14 @@ const SideMenu = ({ toggleSideMenu, isMenuOpen, navigation, route }) => {
           <View style={styles.container}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleIconPress('Edit')}
-            >
-              <Image source={Set} style={styles.icon} />
-              <Text style={styles.buttonText}>{lang[i].settings}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleIconPress('Tnc')}
-            >
+              onPress={() => handleIconPress('Tnc')}>
               <Image source={Appspolicy} style={styles.icon} />
               <Text style={styles.buttonText}>{lang[i].tnc}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleIconPress('Help')}
-            >
+              onPress={() => handleIconPress('Help')}>
               <Image source={Help} style={styles.icon} />
               <Text style={styles.buttonText}>{lang[i].help}</Text>
             </TouchableOpacity>
@@ -147,8 +135,7 @@ const SideMenu = ({ toggleSideMenu, isMenuOpen, navigation, route }) => {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => handleIconPress('About')}
-            >
+              onPress={() => handleIconPress('About')}>
               <Image source={Info} style={styles.icon} />
               <Text style={styles.buttonText}>{lang[i].info}</Text>
             </TouchableOpacity>
@@ -218,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
   },
-  text: { color: 'red' },
+  text: {color: 'red'},
 });
 
 export default SideMenu;

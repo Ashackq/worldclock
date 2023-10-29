@@ -1,47 +1,18 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-import {Clock, Head, WorldClock} from '../components';
+import {Ads, Clock, Head, WorldClock} from '../components';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import {lang} from '../devdata/constants/languages';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 const Back = require('../devdata/assets/background.png');
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 const HomeScreen = ({navigation, route}: HomeProps) => {
   const i = route.params.languageindex;
-
-  // useEffect(() => {
-  //   const loadProgressData = async () => {
-  //     try {
-  //       // Load the progress data from AsyncStorage
-  //       const storedProgress = await AsyncStorage.getItem('progress');
-  //       if (storedProgress) {
-  //         const progressData = JSON.parse(storedProgress);
-  //         navigation.setParams({
-  //           totalcount: progressData.totalcount,
-  //           beadcount: progressData.beadcount,
-  //           target: progressData.target,
-  //           mala: progressData.mala,
-  //           esttime: progressData.esttime,
-  //           elapsedtime: progressData.elapsedtime,
-  //           languageindex: progressData.languageindex,
-  //           malatime: progressData.malatime,
-  //         });
-
-  //         loadProgressData();
-  //       }
-  //     } catch (error) {
-  //       console.error('Error loading progress data:', error);
-  //     }
-  //   };
-  //   // Call the function to load progress data
-  //   loadProgressData();
-  // }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -50,9 +21,30 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       <View style={styles.head}>
         <Head name={lang[i].appname} navigation={navigation} route={route} />
       </View>
-      <View style={styles.clocks}>
-        <Clock i={i} />
-        <WorldClock i={i} />
+      <View style={styles.container1}>
+        <Ads />
+      </View>
+      <View style={styles.clocksContainer}>
+        <View style={styles.clocksRow}>
+          <Clock i={i} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Loading')}
+            style={styles.container2}>
+            <WorldClock i={i} location={'helo'} timeZone={'got em'} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.clocksRow}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Loading')}
+            style={styles.container2}>
+            <WorldClock i={i} location={'helo'} timeZone={'got em'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Loading')}
+            style={styles.container2}>
+            <WorldClock i={i} location={'heo'} timeZone={'got em'} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -64,6 +56,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  container1: {
+    position: 'absolute',
+    top: 340,
+  },
+  container2: {
+    flex: 1,
+  },
   back: {position: 'absolute'},
   head: {
     position: 'absolute',
@@ -72,9 +71,14 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: 1000,
   },
-  clocks: {
+  clocksContainer: {
     marginTop: 50,
-    alignItems: 'flex-start',
+    alignItems: 'center',
+  },
+  clocksRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 140,
   },
 });
 
