@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 //import { StyleSheet } from 'react-native';
 import {Home, Help, Tnc, About} from './screens';
-import {Loading} from './components';
+import {Loading, Timezone} from './components';
 
 export type RootStackParamList = {
   Home: {
@@ -46,6 +46,7 @@ function App(): JSX.Element {
             initialParams={initialRouteParams}
           />
           <Stack.Screen name="Help" component={Help} />
+          <Stack.Screen name="Edit" component={Timezone} />
           <Stack.Screen name="Tnc" component={Tnc} />
           <Stack.Screen name="About" component={About} />
         </Stack.Group>

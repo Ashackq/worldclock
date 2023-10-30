@@ -21,28 +21,23 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       <View style={styles.head}>
         <Head name={lang[i].appname} navigation={navigation} route={route} />
       </View>
-      <View style={styles.container1}>
-        <Ads />
-      </View>
+
       <View style={styles.clocksContainer}>
         <View style={styles.clocksRow}>
           <Clock i={i} />
           <TouchableOpacity
-            onPress={() => navigation.navigate('Loading')}
-            style={styles.container2}>
-            <WorldClock i={i} location={'helo'} timeZone={'got em'} />
+            onPress={() => navigation.push('Edit', {languageindex: i})}>
+            <WorldClock i={i} navigation={navigation} />
           </TouchableOpacity>
         </View>
+        <View style={styles.container1}>
+          <Ads />
+        </View>
         <View style={styles.clocksRow}>
+          <Clock i={i} />
           <TouchableOpacity
-            onPress={() => navigation.navigate('Loading')}
-            style={styles.container2}>
-            <WorldClock i={i} location={'helo'} timeZone={'got em'} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Loading')}
-            style={styles.container2}>
-            <WorldClock i={i} location={'heo'} timeZone={'got em'} />
+            onPress={() => navigation.push('Edit', {languageindex: i})}>
+            <WorldClock i={i} navigation={navigation} />
           </TouchableOpacity>
         </View>
       </View>
@@ -57,8 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container1: {
-    position: 'absolute',
-    top: 340,
+    position: 'relative',
   },
   container2: {
     flex: 1,
@@ -72,7 +66,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   clocksContainer: {
-    marginTop: 50,
     alignItems: 'center',
   },
   clocksRow: {

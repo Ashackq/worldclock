@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Image,
@@ -16,54 +16,50 @@ const Hour = require('../devdata/assets/hour.png');
 const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
 
-class WorldClock extends Component {
-  constructor(props) {
-    super(props);
+const WorldClock = props => {
+  const [hourRotation] = useState(new Animated.Value(0));
+  const [minuteRotation] = useState(new Animated.Value(0));
+  const [secondRotation] = useState(new Animated.Value(0));
+  const [i] = useState(props.i);
+  const [navigation] = useState(props.navigation);
 
-    this.hourRotation = new Animated.Value(0);
-    this.minuteRotation = new Animated.Value(0);
-    this.secondRotation = new Animated.Value(0);
-    this.i = this.props.i;
+  const [dayName, setDayName] = useState('');
+  const [analogTime, setAnalogTime] = useState('');
+  const [date, setDate] = useState('');
 
-    this.state = {
-      dayName: '',
-      analogTime: '',
-      date: '',
-    };
+  const resetSecondHandRotation = () => {
+    secondRotation.setValue(0);
+  };
 
-    this.updateClock = this.updateClock.bind(this);
-    this.prevSeconds = -1;
-  }
+  const openTimeZoneSelector = () => {
+    console.log('haha');
+  };
 
-  resetSecondHandRotation() {
-    this.secondRotation.setValue(0);
-  }
+  const rotateClockHand = (hand, degrees) => {
+    Animated.timing(hand, {
+      toValue: degrees,
+      duration: 500,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
 
-  componentDidMount() {
-    this.interval = setInterval(this.updateClock, 1000);
-    this.updateClock();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  updateClock() {
+  const updateClock = () => {
     const now = new Date(); // Get the current UTC time
     const seconds = now.getUTCSeconds() * 6;
-    if (seconds === 0 && this.prevSeconds !== 0) {
-      this.resetSecondHandRotation();
+    if (seconds === 0 && prevSeconds !== 0) {
+      resetSecondHandRotation();
     }
-    this.prevSeconds = seconds;
+    prevSeconds = seconds;
 
     const minutes = (now.getUTCMinutes() + now.getUTCSeconds() / 60) * 6;
     const hours = ((now.getUTCHours() % 12) + now.getUTCMinutes() / 60) * 30;
 
-    this.rotateClockHand(this.secondRotation, seconds);
-    this.rotateClockHand(this.minuteRotation, minutes);
-    this.rotateClockHand(this.hourRotation, hours);
+    rotateClockHand(secondRotation, seconds);
+    rotateClockHand(minuteRotation, minutes);
+    rotateClockHand(hourRotation, hours);
 
-    const dayName = new Intl.DateTimeFormat(lang[this.i].code, {
+    const dayName = new Intl.DateTimeFormat(lang[i].code, {
       weekday: 'short',
     }).format(now);
 
@@ -72,50 +68,49 @@ class WorldClock extends Component {
       .toString()
       .padStart(2, '0')}`;
 
-    // const date = now.toISOString('en-US').split('T')[0];
     const date = now.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
 
-    this.setState({
-      dayName: dayName,
-      analogTime: analogTime,
-      date: date,
-    });
-  }
+    setDayName(dayName);
+    setAnalogTime(analogTime);
+    setDate(date);
+  };
 
-  rotateClockHand(hand, degrees) {
-    Animated.timing(hand, {
-      toValue: degrees,
-      duration: 1000,
-      easing: Easing.linear,
-      useNativeDriver: false,
-    }).start();
-  }
+  useEffect(() => {
+    const interval = setInterval(updateClock, 1000);
+    updateClock();
 
-  render() {
-    const hourTransform = this.hourRotation.interpolate({
-      inputRange: [0, 360],
-      outputRange: ['0deg', '360deg'],
-    });
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
-    const minuteTransform = this.minuteRotation.interpolate({
-      inputRange: [0, 360],
-      outputRange: ['0deg', '360deg'],
-    });
+  const hourTransform = hourRotation.interpolate({
+    inputRange: [0, 360],
+    outputRange: ['0deg', '360deg'],
+  });
 
-    const secondTransform = this.secondRotation.interpolate({
-      inputRange: [0, 360],
-      outputRange: ['0deg', '360deg'],
-    });
+  const minuteTransform = minuteRotation.interpolate({
+    inputRange: [0, 360],
+    outputRange: ['0deg', '360deg'],
+  });
 
-    return (
-      <View style={styles.container}>
+  const secondTransform = secondRotation.interpolate({
+    inputRange: [0, 360],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={openTimeZoneSelector} style={styles.container}>
+        <Text>Select Time Zone</Text>
+
         <Image source={Clockback} style={styles.img2} />
         <View style={styles.labelcont}>
-          <Text style={styles.label}>{lang[this.i].local}</Text>
+          <Text style={styles.label}>{lang[i].local}</Text>
         </View>
         <Animated.Image
           source={Hour}
@@ -131,14 +126,14 @@ class WorldClock extends Component {
         />
         <View style={styles.detailscont}>
           <Text style={styles.label}>
-            {this.state.dayName}, {this.state.analogTime}
+            {dayName}, {analogTime}
           </Text>
-          <Text style={styles.label}>{this.state.date}</Text>
+          <Text style={styles.label}>{date}</Text>
         </View>
-      </View>
-    );
-  }
-}
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -168,6 +163,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 200,
     width: 200,
+  },
+  timeZoneSelector: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

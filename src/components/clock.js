@@ -66,7 +66,7 @@ class Clock extends Component {
   rotateClockHand(hand, degrees) {
     Animated.timing(hand, {
       toValue: degrees,
-      duration: 1000,
+      duration: 500,
       easing: Easing.linear,
       useNativeDriver: false,
     }).start();
