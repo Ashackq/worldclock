@@ -32,7 +32,7 @@ const WorldClock = props => {
   };
 
   const openTimeZoneSelector = () => {
-    console.log('haha');
+    navigation.push('Edit', {languageindex: i});
   };
 
   const rotateClockHand = (hand, degrees) => {

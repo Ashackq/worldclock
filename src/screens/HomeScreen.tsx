@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 
 import {Ads, Clock, Head, WorldClock} from '../components';
 
@@ -25,20 +25,15 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
       <View style={styles.clocksContainer}>
         <View style={styles.clocksRow}>
           <Clock i={i} />
-          <TouchableOpacity
-            onPress={() => navigation.push('Edit', {languageindex: i})}>
-            <WorldClock i={i} navigation={navigation} />
-          </TouchableOpacity>
+          <WorldClock i={i} navigation={navigation} />
         </View>
         <View style={styles.container1}>
           <Ads />
         </View>
         <View style={styles.clocksRow}>
           <Clock i={i} />
-          <TouchableOpacity
-            onPress={() => navigation.push('Edit', {languageindex: i})}>
-            <WorldClock i={i} navigation={navigation} />
-          </TouchableOpacity>
+
+          <WorldClock i={i} navigation={navigation} />
         </View>
       </View>
     </View>
