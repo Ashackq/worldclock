@@ -1,23 +1,16 @@
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
-const Home = require('../devdata/assets/Home.png');
-const Edit = require('../devdata/assets/edit.jpg');
-const Help = require('../devdata/assets/help.png');
-import { colors } from '../devdata/constants/lang';
-import { lang } from '../devdata/constants/languages';
-const Footer = ({
-  navigation,
-  route,
-  i,
-}) => {
+/* eslint-disable prettier/prettier */
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import {colors} from '../devdata/constants/lang';
+
+const Footer = ({navigation, route}) => {
   const [activeIcon, setActiveIcon] = useState('Home');
+  const i = 1;
 
   useEffect(() => {
-    // Update the active icon based on the route name
-    if (route.name === 'Edit') {
-      setActiveIcon('Edit');
-    } else if (route.name === 'Help') {
-      setActiveIcon('Help');
+    if (route.name === 'Conv') {
+      setActiveIcon('Conv');
     } else {
       setActiveIcon('Home');
     }
@@ -25,24 +18,14 @@ const Footer = ({
 
   const handleIconPress = (iconName: string) => {
     setActiveIcon(iconName);
-
-    console.log(`${iconName} button pressed.`);
     let targetRoute = '';
     if (iconName === 'Home') {
       targetRoute = 'Home';
-    } else if (iconName === 'Edit') {
-      targetRoute = 'Edit';
-    } else if (iconName === 'Help') {
-      targetRoute = 'Help';
+    } else if (iconName === 'Conv') {
+      targetRoute = 'Conv';
     }
 
     navigation.push(targetRoute, {
-      target: target,
-      totalcount: totalcount,
-      mala: mala,
-      beadcount: beadcount,
-      elapsedtiem: elapsedtiem,
-      esttime: esttime,
       languageindex: i,
     });
   };
@@ -50,51 +33,25 @@ const Footer = ({
   return (
     <View style={styles.container}>
       <View style={styles.bottomBar}>
-        <TouchableOpacity
-          onPress={() => handleIconPress('Home')}
+        <View style={styles.bottomBar1}>
+          <TouchableOpacity
+            onPress={() => handleIconPress('Home')}
+            style={[styles.bottomBarButton]}>
+            <Text style={styles.aftertext}>Clocks</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleIconPress('Conv')}
+            style={[styles.bottomBarButton]}>
+            <Text style={styles.aftertext}>Converter</Text>
+          </TouchableOpacity>
+        </View>
+        <Animatable.View
+          animation={activeIcon === 'Conv' ? 'slideInRight' : 'slideInLeft'}
           style={[
-            styles.bottomBarButton,
-            activeIcon === 'Home' && styles.activeButton,
+            styles.bottomBar2,
+            activeIcon === 'Conv' && styles.bottomBar2Active,
           ]}
-        >
-          <Image
-            source={Home}
-            style={[styles.icon, activeIcon === 'Home' && styles.activeIcon]}
-          />
-          {activeIcon === 'Home' && (
-            <Text style={styles.aftertext}>{lang[i].home}</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconPress('Edit')}
-          style={[
-            styles.bottomBarButton,
-            activeIcon === 'Edit' && styles.activeButton,
-          ]}
-        >
-          <Image
-            source={Edit}
-            style={[styles.icon, activeIcon === 'Edit' && styles.activeIcon]}
-          />
-          {activeIcon === 'Edit' && (
-            <Text style={styles.aftertext}>{lang[i].edit}</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleIconPress('Help')}
-          style={[
-            styles.bottomBarButton,
-            activeIcon === 'Help' && styles.activeButton,
-          ]}
-        >
-          <Image
-            source={Help}
-            style={[styles.icon, activeIcon === 'Help' && styles.activeIcon]}
-          />
-          {activeIcon === 'Help' && (
-            <Text style={styles.aftertext}>{lang[i].help}</Text>
-          )}
-        </TouchableOpacity>
+        />
       </View>
     </View>
   );
@@ -102,28 +59,47 @@ const Footer = ({
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: -50,
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   bottomBar: {
     position: 'absolute',
     bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     padding: 8,
     backgroundColor: colors.headfoot,
-    // background: 'transperant',
   },
   bottomBarButton: {
-    padding: 10,
-    backgroundColor: colors.headfootbutton,
-
-    elevation: 10,
-    borderRadius: 12,
+    backgroundColor: 'grey',
+    height: 30,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 7,
+  },
+  bottomBar1: {
+    backgroundColor: 'grey',
+    padding: 3,
     flexDirection: 'row',
+    borderRadius: 8,
+  },
+  bottomBar2: {
+    padding: 3,
+    flexDirection: 'row',
+    borderRadius: 8,
+    width: 100,
+    height: 30,
+    position: 'absolute',
+    margin: 3,
+    borderColor: 'white',
+    borderWidth: 2,
+    left: 103,
+  },
+  bottomBar2Active: {
+    left: 203,
   },
   icon: {
     height: 25,
@@ -134,15 +110,15 @@ const styles = StyleSheet.create({
     tintColor: colors.tintcolor,
   },
   activeButton: {
-    width: 110,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    elevation: 10,
   },
   aftertext: {
-    color: colors.headfootbuttontext,
-
     fontSize: 16,
-    marginLeft: 11,
+    color: 'black',
+    fontWeight: '400',
   },
 });
 

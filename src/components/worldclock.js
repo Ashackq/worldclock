@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {lang} from '../devdata/constants/languages';
+import Timezone from './timezone';
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
@@ -20,8 +21,10 @@ const WorldClock = props => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
   const [secondRotation] = useState(new Animated.Value(0));
-  const [i] = useState(props.i);
-  const [navigation] = useState(props.navigation);
+  const i = 1;
+
+  const [TZ, setTimeZone] = useState('UTC');
+  const [Location, setLocation] = useState('UTC');
 
   const [dayName, setDayName] = useState('');
   const [analogTime, setAnalogTime] = useState('');
@@ -31,8 +34,15 @@ const WorldClock = props => {
     secondRotation.setValue(0);
   };
 
+  const [showTimezone, setShowTimezone] = useState(false);
+
   const openTimeZoneSelector = () => {
-    navigation.push('Edit', {languageindex: i});
+    setShowTimezone(true);
+  };
+
+  const getTimeZoneOffset = () => {
+    const timeZoneOffset = parseFloat(TZ.split(' ')[1]);
+    return timeZoneOffset;
   };
 
   const rotateClockHand = (hand, degrees) => {
@@ -47,6 +57,7 @@ const WorldClock = props => {
   const updateClock = () => {
     const now = new Date(); // Get the current UTC time
     const seconds = now.getUTCSeconds() * 6;
+    let prevSeconds = seconds;
     if (seconds === 0 && prevSeconds !== 0) {
       resetSecondHandRotation();
     }
@@ -59,24 +70,24 @@ const WorldClock = props => {
     rotateClockHand(minuteRotation, minutes);
     rotateClockHand(hourRotation, hours);
 
-    const dayName = new Intl.DateTimeFormat(lang[i].code, {
+    const dayName1 = new Intl.DateTimeFormat(lang[i].code, {
       weekday: 'short',
     }).format(now);
 
-    const analogTime = `${now.getUTCHours().toString().padStart(2, '0')}:${now
+    const analogTime1 = `${now.getUTCHours().toString().padStart(2, '0')}:${now
       .getUTCMinutes()
       .toString()
       .padStart(2, '0')}`;
 
-    const date = now.toLocaleDateString('en-US', {
+    const date1 = now.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
 
-    setDayName(dayName);
-    setAnalogTime(analogTime);
-    setDate(date);
+    setDayName(dayName1);
+    setAnalogTime(analogTime1);
+    setDate(date1);
   };
 
   useEffect(() => {
@@ -104,38 +115,66 @@ const WorldClock = props => {
   });
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={openTimeZoneSelector} style={styles.container}>
-        <Text>Select Time Zone</Text>
+    <>
+      {showTimezone ? (
+        <View style={styles.container}>
+          <Timezone
+            setSelectedTimeZone={setTimeZone}
+            setSelectedLocation={setLocation}
+            cancel={setShowTimezone}
+          />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={openTimeZoneSelector}
+            style={styles.container}>
+            <Text>Select Time Zone</Text>
 
-        <Image source={Clockback} style={styles.img2} />
-        <View style={styles.labelcont}>
-          <Text style={styles.label}>{lang[i].local}</Text>
+            <Image source={Clockback} style={styles.img2} />
+            <View style={styles.labelcont}>
+              <Text style={styles.label}>{Location}</Text>
+            </View>
+            <Animated.Image
+              source={Hour}
+              style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
+            />
+            <Animated.Image
+              source={Minute}
+              style={[
+                styles.clockHand,
+                {transform: [{rotate: minuteTransform}]},
+              ]}
+            />
+            <Animated.Image
+              source={Second}
+              style={[
+                styles.clockHand,
+                {transform: [{rotate: secondTransform}]},
+              ]}
+            />
+            <View style={styles.detailscont}>
+              <Text style={styles.label}>
+                {dayName}, {analogTime}
+              </Text>
+              <Text style={styles.label}>{date}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <Animated.Image
-          source={Hour}
-          style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
-        />
-        <Animated.Image
-          source={Minute}
-          style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
-        />
-        <Animated.Image
-          source={Second}
-          style={[styles.clockHand, {transform: [{rotate: secondTransform}]}]}
-        />
-        <View style={styles.detailscont}>
-          <Text style={styles.label}>
-            {dayName}, {analogTime}
-          </Text>
-          <Text style={styles.label}>{date}</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  editview: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -143,7 +182,7 @@ const styles = StyleSheet.create({
   },
   labelcont: {
     position: 'relative',
-    top: -40,
+    top: -50,
   },
   label: {
     fontSize: 16,
@@ -151,7 +190,7 @@ const styles = StyleSheet.create({
   },
   detailscont: {
     position: 'relative',
-    top: 40,
+    top: 30,
   },
   img2: {
     flex: 1,

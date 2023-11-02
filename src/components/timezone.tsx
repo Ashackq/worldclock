@@ -10,18 +10,12 @@ import {
 } from 'react-native';
 import {timezonesData} from '../devdata/constants/lang';
 
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
-
-type HomeProps = NativeStackScreenProps<RootStackParamList, 'Edit'>;
-
-const Timezone = ({navigation, route}: HomeProps) => {
+const Timezone = ({setSelectedTimeZone, setSelectedLocation, cancel}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTimezone, setSelectedTimezone] = useState({
     location: 'Chicago',
     timezone: 'GMT - 05:00',
   });
-
   // Function to filter timezones based on search query
   const filteredTimezones = timezonesData.filter(timezone =>
     timezone.location.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -39,14 +33,16 @@ const Timezone = ({navigation, route}: HomeProps) => {
 
   // Function to set the selected zone and display results
   const setZone = () => {
-    calculateDSTTransition(); // Calculate DST transition
-
-    // Implement your logic to set the zone, display location, and date/time
+    calculateDSTTransition();
+    setSelectedTimeZone(selectedTimezone.timezone);
+    setSelectedLocation(selectedTimezone.location);
+    cancel(false);
   };
 
   // Function to cancel the selection and clear the selected timezone
   const cancelSelection = () => {
     console.log('cancel presed');
+    cancel(false);
   };
 
   return (
@@ -144,7 +140,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     padding: 10,
     borderRadius: 5,
-    right: -30,
+    right: 0,
   },
   cancelButtonText: {
     fontSize: 16,

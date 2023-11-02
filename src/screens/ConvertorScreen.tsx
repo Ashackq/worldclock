@@ -8,7 +8,7 @@ import {lang} from '../devdata/constants/languages';
 import Footer from '../components/footer';
 const Back = require('../devdata/assets/background.png');
 
-type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+type HomeProps = NativeStackScreenProps<RootStackParamList, 'Conv'>;
 
 const HomeScreen = ({navigation, route}: HomeProps) => {
   const i = route.params.languageindex;
@@ -28,10 +28,6 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
         </View>
         <View style={styles.container1}>
           <Ads />
-        </View>
-        <View style={styles.clocksRow}>
-          <Clock i={i} />
-          <WorldClock navigation={navigation} />
         </View>
       </View>
       <Footer navigation={navigation} route={route} />

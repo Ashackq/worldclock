@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React, {useState} from 'react';
 import {colors} from '../devdata/constants/lang';
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     left: 20,
   },
   headerTitle: {
-    color: '#fff',
+    color: '#000',
     fontSize: 20,
     zIndex: 1,
   },

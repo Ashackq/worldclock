@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 
 export const colors = {
-  headfoot: 'grey',
-  headfootbutton: '#4C2E05',
+  headfoot: '#F6F7EB',
+  headfootbutton: 'grey',
   headfootbuttontext: 'black',
   tintcolor: 'white',
 };

@@ -5,14 +5,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 //import { StyleSheet } from 'react-native';
-import {Home, Help, Tnc, About} from './screens';
+import {Home, Help, Tnc, About, Convertor} from './screens';
 import {Loading, Timezone} from './components';
 
 export type RootStackParamList = {
   Home: {
     languageindex: number;
   };
-  Edit: {
+  Conv: {
     languageindex: number;
   };
   Player: {
@@ -45,8 +45,8 @@ function App(): JSX.Element {
             component={Home}
             initialParams={initialRouteParams}
           />
+          <Stack.Screen name="Conv" component={Convertor} />
           <Stack.Screen name="Help" component={Help} />
-          <Stack.Screen name="Edit" component={Timezone} />
           <Stack.Screen name="Tnc" component={Tnc} />
           <Stack.Screen name="About" component={About} />
         </Stack.Group>
