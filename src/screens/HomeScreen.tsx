@@ -23,15 +23,25 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
 
       <View style={styles.clocksContainer}>
         <View style={styles.clocksRow}>
-          <Clock i={i} />
-          <WorldClock navigation={navigation} />
-        </View>
-        <View style={styles.container1}>
-          <Ads />
+          <View style={styles.clocksRowelement}>
+            <Clock i={i} />
+          </View>
+          <View style={styles.clocksRowelement}>
+            <WorldClock />
+          </View>
         </View>
         <View style={styles.clocksRow}>
-          <Clock i={i} />
-          <WorldClock navigation={navigation} />
+          <View style={styles.clocksRowadd}>
+            <Ads />
+          </View>
+        </View>
+        <View style={styles.clocksRow}>
+          <View style={styles.clocksRowelement}>
+            <WorldClock />
+          </View>
+          <View style={styles.clocksRowelement}>
+            <WorldClock />
+          </View>
         </View>
       </View>
       <Footer navigation={navigation} route={route} />
@@ -45,12 +55,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container1: {
-    position: 'relative',
-  },
-  container2: {
-    flex: 1,
-  },
   back: {position: 'absolute'},
   head: {
     position: 'absolute',
@@ -61,11 +65,19 @@ const styles = StyleSheet.create({
   },
   clocksContainer: {
     alignItems: 'center',
+    marginTop: 80,
   },
   clocksRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 140,
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+  clocksRowelement: {
+    margin: 50,
+  },
+  clocksRowadd: {
+    left: 0,
+    right: 0,
   },
 });
 

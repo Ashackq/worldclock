@@ -106,7 +106,7 @@ class Clock extends Component {
       <View style={styles.container}>
         <Image source={Clockback} style={styles.img2} />
         <View style={styles.labelcont}>
-          <Text style={styles.label}>{lang[this.i].local}</Text>
+          <Text style={styles.label}>Local</Text>
         </View>
         <Animated.Image
           source={Hour}

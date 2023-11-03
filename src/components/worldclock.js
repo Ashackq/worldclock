@@ -8,32 +8,25 @@ import {
   Easing,
   Text,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {lang} from '../devdata/constants/languages';
 import Timezone from './timezone';
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
-const Second = require('../devdata/assets/second.png');
+// const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
 
 const WorldClock = props => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
-  const [secondRotation] = useState(new Animated.Value(0));
   const i = 1;
-
-  const [TZ, setTimeZone] = useState('UTC');
-  const [Location, setLocation] = useState('UTC');
-
+  const [TZ, setTimeZone] = useState('GMT + 00:00');
+  const [Location, setLocation] = useState('London');
   const [dayName, setDayName] = useState('');
   const [analogTime, setAnalogTime] = useState('');
   const [date, setDate] = useState('');
-
-  const resetSecondHandRotation = () => {
-    secondRotation.setValue(0);
-  };
-
   const [showTimezone, setShowTimezone] = useState(false);
 
   const openTimeZoneSelector = () => {
@@ -41,10 +34,13 @@ const WorldClock = props => {
   };
 
   const getTimeZoneOffset = () => {
-    const timeZoneOffset = parseFloat(TZ.split(' ')[1]);
-    return timeZoneOffset;
+    const parts = TZ.split(' ');
+    const offsetString = parts[2];
+    const [sign, hours, minutes] = offsetString.match(/([-+]?\d{2}):(\d{2})/);
+    const totalOffset =
+      (parseInt(hours) * 60 + parseInt(minutes)) * (sign === '-' ? -1 : 1);
+    return totalOffset;
   };
-
   const rotateClockHand = (hand, degrees) => {
     Animated.timing(hand, {
       toValue: degrees,
@@ -55,18 +51,13 @@ const WorldClock = props => {
   };
 
   const updateClock = () => {
-    const now = new Date(); // Get the current UTC time
-    const seconds = now.getUTCSeconds() * 6;
-    let prevSeconds = seconds;
-    if (seconds === 0 && prevSeconds !== 0) {
-      resetSecondHandRotation();
-    }
-    prevSeconds = seconds;
+    const now = new Date();
+    const timeZoneOffset = getTimeZoneOffset();
+    now.setMinutes(now.getMinutes() + timeZoneOffset);
 
     const minutes = (now.getUTCMinutes() + now.getUTCSeconds() / 60) * 6;
     const hours = ((now.getUTCHours() % 12) + now.getUTCMinutes() / 60) * 30;
 
-    rotateClockHand(secondRotation, seconds);
     rotateClockHand(minuteRotation, minutes);
     rotateClockHand(hourRotation, hours);
 
@@ -100,69 +91,49 @@ const WorldClock = props => {
   }, []);
 
   const hourTransform = hourRotation.interpolate({
-    inputRange: [0, 360],
-    outputRange: ['0deg', '360deg'],
+    inputRange: [1, 360],
+    outputRange: ['1deg', '360deg'],
   });
 
   const minuteTransform = minuteRotation.interpolate({
-    inputRange: [0, 360],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  const secondTransform = secondRotation.interpolate({
-    inputRange: [0, 360],
-    outputRange: ['0deg', '360deg'],
+    inputRange: [1, 360],
+    outputRange: ['1deg', '360deg'],
   });
 
   return (
-    <>
-      {showTimezone ? (
-        <View style={styles.container}>
-          <Timezone
-            setSelectedTimeZone={setTimeZone}
-            setSelectedLocation={setLocation}
-            cancel={setShowTimezone}
-          />
-        </View>
-      ) : (
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={openTimeZoneSelector}
-            style={styles.container}>
-            <Text>Select Time Zone</Text>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={openTimeZoneSelector} style={styles.container}>
+        <Text>Select Time Zone</Text>
 
-            <Image source={Clockback} style={styles.img2} />
-            <View style={styles.labelcont}>
-              <Text style={styles.label}>{Location}</Text>
-            </View>
-            <Animated.Image
-              source={Hour}
-              style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
-            />
-            <Animated.Image
-              source={Minute}
-              style={[
-                styles.clockHand,
-                {transform: [{rotate: minuteTransform}]},
-              ]}
-            />
-            <Animated.Image
-              source={Second}
-              style={[
-                styles.clockHand,
-                {transform: [{rotate: secondTransform}]},
-              ]}
-            />
-            <View style={styles.detailscont}>
-              <Text style={styles.label}>
-                {dayName}, {analogTime}
-              </Text>
-              <Text style={styles.label}>{date}</Text>
-            </View>
-          </TouchableOpacity>
+        <Image source={Clockback} style={styles.img2} />
+        <View style={styles.labelcont}>
+          <Text style={styles.label}>{Location}</Text>
         </View>
-      )}
-    </>
+        <Animated.Image
+          source={Hour}
+          style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
+        />
+        <Animated.Image
+          source={Minute}
+          style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
+        />
+        <View style={styles.detailscont}>
+          <Text style={styles.label}>
+            {dayName}, {analogTime}
+          </Text>
+          <Text style={styles.label}>{date}</Text>
+        </View>
+      </TouchableOpacity>
+      <Modal visible={showTimezone} animationType="slide">
+        <Timezone
+          loc={Location}
+          tiz={TZ}
+          setSelectedTimeZone={setTimeZone}
+          setSelectedLocation={setLocation}
+          cancel={setShowTimezone}
+        />
+      </Modal>
+    </View>
   );
 };
 
@@ -175,11 +146,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 50,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  container: {justifyContent: 'center', alignItems: 'center'},
   labelcont: {
     position: 'relative',
     top: -50,

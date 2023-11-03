@@ -13,8 +13,8 @@ import {timezonesData} from '../devdata/constants/lang';
 const Timezone = ({setSelectedTimeZone, setSelectedLocation, cancel}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTimezone, setSelectedTimezone] = useState({
-    location: 'Chicago',
-    timezone: 'GMT - 05:00',
+    location: 'London',
+    timezone: 'GMT + 00:00',
   });
   // Function to filter timezones based on search query
   const filteredTimezones = timezonesData.filter(timezone =>
@@ -41,7 +41,6 @@ const Timezone = ({setSelectedTimeZone, setSelectedLocation, cancel}) => {
 
   // Function to cancel the selection and clear the selected timezone
   const cancelSelection = () => {
-    console.log('cancel presed');
     cancel(false);
   };
 
@@ -66,7 +65,9 @@ const Timezone = ({setSelectedTimeZone, setSelectedLocation, cancel}) => {
       </ScrollView>
 
       <View style={styles.outputContainer}>
-        <Text style={styles.outputHeading}>Selected Timezone:</Text>
+        <Text style={styles.outputHeading}>
+          Selected Timezone: {selectedTimezone.timezone}
+        </Text>
 
         <Text style={styles.outputText}>
           Location: {selectedTimezone.location}
