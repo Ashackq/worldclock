@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
-import {View, Image, StyleSheet, Animated, Easing, Text} from 'react-native';
-import {lang} from '../devdata/constants/languages';
+import React, { useState, useEffect } from 'react';
+import { View, Image, StyleSheet, Animated, Easing, Text } from 'react-native';
+import { lang } from '../devdata/constants/languages';
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
 const Minute = require('../devdata/assets/minutes.png');
 
-const Convertorclock = props => {
+const Convertorclock = (props) => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
   const i = 1;
@@ -17,7 +17,7 @@ const Convertorclock = props => {
   const [analogTime, setAnalogTime] = useState('');
   const [date, setDate] = useState(props.date);
 
-  const getTimeZoneOffset = Timebro => {
+  const getTimeZoneOffset = (Timebro) => {
     const parts = Timebro.split(' ');
     const offsetString = parts[2];
     const [sign, hours, minutes] = offsetString.match(/([-+]?\d{2}):(\d{2})/);
@@ -35,7 +35,7 @@ const Convertorclock = props => {
     }).start();
   };
 
-  const updateClock = Timebro => {
+  const updateClock = (Timebro) => {
     const now = new Date(props.date);
     const timeZoneOffset = getTimeZoneOffset(Timebro);
     now.setMinutes(now.getMinutes() + timeZoneOffset);
@@ -70,7 +70,7 @@ const Convertorclock = props => {
     return () => {
       clearInterval(interval);
     };
-  }, [TZ]);
+  }, [TZ, updateClock]);
 
   const hourTransform = hourRotation.interpolate({
     inputRange: [1, 360],
@@ -92,11 +92,11 @@ const Convertorclock = props => {
       </View>
       <Animated.Image
         source={Hour}
-        style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
+        style={[styles.clockHand, { transform: [{ rotate: hourTransform }] }]}
       />
       <Animated.Image
         source={Minute}
-        style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
+        style={[styles.clockHand, { transform: [{ rotate: minuteTransform }] }]}
       />
       <View style={styles.detailscont}>
         <Text style={styles.label}>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 50,
   },
-  container: {justifyContent: 'center', alignItems: 'center'},
+  container: { justifyContent: 'center', alignItems: 'center' },
   labelcont: {
     position: 'relative',
     top: -50,

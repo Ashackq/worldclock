@@ -9,3 +9,4 @@ export {default as WorldClock} from './worldclock';
 export {default as Timezone} from './timezone';
 export {default as SetClock} from './setclock';
 export {default as Convertor} from './convertorclock';
+export {default as Picker} from './picker';

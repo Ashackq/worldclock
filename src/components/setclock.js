@@ -1,22 +1,21 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Picker } from '.';
 const SetClock = ({
   initialTimezone,
   initialLocation,
-  setSelectedTimeZone,
-  setSelectedLocation,
+  setDate,
+  Date,
   onCancel,
 }) => {
   const [selectedTimezone] = useState({
     location: initialLocation || 'London',
     timezone: initialTimezone || 'GMT + 00:00',
   });
-
+  const [date, setDates] = useState(Date);
   const setDateTime = () => {
-    setSelectedTimeZone(selectedTimezone.timezone);
-    setSelectedLocation(selectedTimezone.location);
+    setDate(date);
     onCancel(false);
   };
 
@@ -27,7 +26,7 @@ const SetClock = ({
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Set the Date and Time</Text>
-
+      <Picker setDates={setDates} Datte={Date} />
       <View style={styles.outputContainer}>
         <Text style={styles.outputHeading}>
           Timezone: {selectedTimezone.timezone}
@@ -39,7 +38,8 @@ const SetClock = ({
 
       <TouchableOpacity
         style={styles.selectDateTimeButton}
-        onPress={setDateTime}>
+        onPress={setDateTime}
+      >
         <Text style={styles.selectDateTimeButtonText}>Accept</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.cancelButton} onPress={cancelSelection}>

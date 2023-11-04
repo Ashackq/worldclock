@@ -1,22 +1,23 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
-import {View, StyleSheet, Image, Modal, TouchableOpacity} from 'react-native';
-import {Ads, Head, Convertor, SetClock} from '../components';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
-import {lang} from '../devdata/constants/languages';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Modal, TouchableOpacity } from 'react-native';
+import { Ads, Head, Convertor, SetClock } from '../components';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App';
+import { lang } from '../devdata/constants/languages';
 import Footer from '../components/footer';
 const Back = require('../devdata/assets/background.png');
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Conv'>;
 
-const Contervo = ({navigation, route}: HomeProps) => {
+const Contervo = ({ navigation, route }: HomeProps) => {
   const i = 1;
   const [showTimezone, setShowTimezone] = useState(false);
   const [TZ, setTimeZone] = useState('GMT + 00:00');
   const [Location, setLocation] = useState('London');
-  const [Time, setTime] = useState('00:00');
   const [Date, setDate] = useState('2000-01-01T00:00:00.000Z');
+  console.log(Date);
+
   const openTimezoneSelector = () => {
     setShowTimezone(true);
   };
@@ -32,7 +33,7 @@ const Contervo = ({navigation, route}: HomeProps) => {
         <View style={styles.clocksRow}>
           <View style={styles.clocksRowelement}>
             <TouchableOpacity onPress={openTimezoneSelector}>
-              <Convertor Time={Time} date={Date} tz={TZ} loc={Location} />
+              <Convertor date={Date} tz={TZ} loc={Location} />
             </TouchableOpacity>
           </View>
         </View>
@@ -44,10 +45,10 @@ const Contervo = ({navigation, route}: HomeProps) => {
       </View>
       <Modal visible={showTimezone} animationType="slide">
         <SetClock
+          Date={Date}
           initialTimezone={TZ}
           initialLocation={Location}
-          setSelectedTimeZone={newTimeZone => setTimeZone(newTimeZone)}
-          setSelectedLocation={newLocation => setLocation(newLocation)}
+          setDate={setDate}
           onCancel={setShowTimezone}
         />
       </Modal>
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  back: {position: 'absolute'},
+  back: { position: 'absolute' },
   head: {
     position: 'absolute',
     top: 0,
