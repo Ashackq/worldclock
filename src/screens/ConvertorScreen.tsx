@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
-import {Ads, Clock, Head, WorldClock} from '../components';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image, Modal, TouchableOpacity} from 'react-native';
+import {Ads, Head, Convertor, SetClock} from '../components';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import {lang} from '../devdata/constants/languages';
@@ -10,9 +10,16 @@ const Back = require('../devdata/assets/background.png');
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Conv'>;
 
-const HomeScreen = ({navigation, route}: HomeProps) => {
-  const i = route.params.languageindex;
-
+const Contervo = ({navigation, route}: HomeProps) => {
+  const i = 1;
+  const [showTimezone, setShowTimezone] = useState(false);
+  const [TZ, setTimeZone] = useState('GMT + 00:00');
+  const [Location, setLocation] = useState('London');
+  const [Time, setTime] = useState('00:00');
+  const [Date, setDate] = useState('2000-01-01T00:00:00.000Z');
+  const openTimezoneSelector = () => {
+    setShowTimezone(true);
+  };
   return (
     <View style={styles.container}>
       <Image source={Back} style={styles.back} />
@@ -23,13 +30,27 @@ const HomeScreen = ({navigation, route}: HomeProps) => {
 
       <View style={styles.clocksContainer}>
         <View style={styles.clocksRow}>
-          <Clock i={i} />
-          <WorldClock navigation={navigation} />
+          <View style={styles.clocksRowelement}>
+            <TouchableOpacity onPress={openTimezoneSelector}>
+              <Convertor Time={Time} date={Date} tz={TZ} loc={Location} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.container1}>
-          <Ads />
+        <View style={styles.clocksRow}>
+          <View style={styles.clocksRowadd}>
+            <Ads />
+          </View>
         </View>
       </View>
+      <Modal visible={showTimezone} animationType="slide">
+        <SetClock
+          initialTimezone={TZ}
+          initialLocation={Location}
+          setSelectedTimeZone={newTimeZone => setTimeZone(newTimeZone)}
+          setSelectedLocation={newLocation => setLocation(newLocation)}
+          onCancel={setShowTimezone}
+        />
+      </Modal>
       <Footer navigation={navigation} route={route} />
     </View>
   );
@@ -41,12 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container1: {
-    position: 'relative',
-  },
-  container2: {
-    flex: 1,
-  },
   back: {position: 'absolute'},
   head: {
     position: 'absolute',
@@ -57,12 +72,20 @@ const styles = StyleSheet.create({
   },
   clocksContainer: {
     alignItems: 'center',
+    marginTop: 80,
   },
   clocksRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 140,
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+  clocksRowelement: {
+    margin: 50,
+  },
+  clocksRowadd: {
+    left: 0,
+    right: 0,
   },
 });
 
-export default HomeScreen;
+export default Contervo;

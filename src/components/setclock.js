@@ -1,84 +1,46 @@
 /* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
-import {timezonesData} from '../devdata/constants/lang';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const Timezone = ({
-  Tiz,
-  loc,
+const SetClock = ({
+  initialTimezone,
+  initialLocation,
   setSelectedTimeZone,
   setSelectedLocation,
-  cancel,
+  onCancel,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTimezone, setSelectedTimezone] = useState({
-    location: loc || 'London',
-    timezone: Tiz || 'GMT + 00:00',
+  const [selectedTimezone] = useState({
+    location: initialLocation || 'London',
+    timezone: initialTimezone || 'GMT + 00:00',
   });
 
-  const filteredTimezones = timezonesData.filter(timezone =>
-    timezone.location.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  const handleTimezoneSelect = timezone => {
-    setSelectedTimezone(timezone);
-  };
-
-  const calculateDSTTransition = () => {
-    // Implement your DST transition logic here
-  };
-
-  const setZone = () => {
-    calculateDSTTransition();
+  const setDateTime = () => {
     setSelectedTimeZone(selectedTimezone.timezone);
     setSelectedLocation(selectedTimezone.location);
-    cancel(false);
+    onCancel(false);
   };
 
   const cancelSelection = () => {
-    cancel(false);
+    onCancel(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Select Your Country and City</Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search Your City"
-        value={searchQuery}
-        onChangeText={text => setSearchQuery(text)}
-      />
-      <ScrollView style={styles.selectWrapper}>
-        {filteredTimezones.map((timezone, index) => (
-          <Text
-            key={index}
-            style={styles.timezoneItem}
-            onPress={() => handleTimezoneSelect(timezone)}>
-            {timezone.location} - {timezone.timezone}
-          </Text>
-        ))}
-      </ScrollView>
+      <Text style={styles.heading}>Set the Date and Time</Text>
 
       <View style={styles.outputContainer}>
         <Text style={styles.outputHeading}>
-          Selected Timezone: {selectedTimezone.timezone}
+          Timezone: {selectedTimezone.timezone}
         </Text>
-
         <Text style={styles.outputText}>
           Location: {selectedTimezone.location}
         </Text>
-        <Text style={styles.outputText}>{selectedTimezone.timezone}</Text>
       </View>
 
-      <TouchableOpacity style={styles.setZoneButton} onPress={setZone}>
-        <Text style={styles.setZoneButtonText}>Set Zone</Text>
+      <TouchableOpacity
+        style={styles.selectDateTimeButton}
+        onPress={setDateTime}>
+        <Text style={styles.selectDateTimeButtonText}>Accept</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.cancelButton} onPress={cancelSelection}>
         <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -128,12 +90,11 @@ const styles = StyleSheet.create({
   outputText: {
     fontSize: 16,
   },
-
-  setZoneButton: {
+  selectDateTimeButton: {
     padding: 10,
   },
-  setZoneButtonText: {
-    fontSize: 55,
+  selectDateTimeButtonText: {
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'darkblue',
     textAlign: 'center',
@@ -152,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Timezone;
+export default SetClock;

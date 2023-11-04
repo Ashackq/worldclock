@@ -1,37 +1,21 @@
 /* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Animated,
-  Easing,
-  Text,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
+import {View, Image, StyleSheet, Animated, Easing, Text} from 'react-native';
 import {lang} from '../devdata/constants/languages';
-import Timezone from './timezone';
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
-// const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
 
-const WorldClock = props => {
+const Convertorclock = props => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
   const i = 1;
-  const [TZ, setTimeZone] = useState('GMT + 00:00');
-  const [Location, setLocation] = useState('London');
+  const TZ = props.tz;
+  const Location = props.loc;
   const [dayName, setDayName] = useState('');
   const [analogTime, setAnalogTime] = useState('');
-  const [date, setDate] = useState('');
-  const [showTimezone, setShowTimezone] = useState(false);
-
-  const openTimeZoneSelector = () => {
-    setShowTimezone(true);
-  };
+  const [date, setDate] = useState(props.date);
 
   const getTimeZoneOffset = Timebro => {
     const parts = Timebro.split(' ');
@@ -41,6 +25,7 @@ const WorldClock = props => {
       (parseInt(hours) * 60 + parseInt(minutes)) * (sign === '-' ? -1 : 1);
     return totalOffset;
   };
+
   const rotateClockHand = (hand, degrees) => {
     Animated.timing(hand, {
       toValue: degrees,
@@ -49,8 +34,9 @@ const WorldClock = props => {
       useNativeDriver: false,
     }).start();
   };
+
   const updateClock = Timebro => {
-    const now = new Date();
+    const now = new Date(props.date);
     const timeZoneOffset = getTimeZoneOffset(Timebro);
     now.setMinutes(now.getMinutes() + timeZoneOffset);
     const minutes = (now.getUTCMinutes() + now.getUTCSeconds() / 60) * 6;
@@ -78,9 +64,9 @@ const WorldClock = props => {
     setAnalogTime(analogTime1);
     setDate(date1);
   };
+
   useEffect(() => {
     const interval = setInterval(() => updateClock(TZ), 1000);
-    updateClock(TZ);
     return () => {
       clearInterval(interval);
     };
@@ -98,37 +84,26 @@ const WorldClock = props => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={openTimeZoneSelector} style={styles.container}>
-        <Text>Select Time Zone</Text>
+      <Text>Select Time Zone</Text>
 
-        <Image source={Clockback} style={styles.img2} />
-        <View style={styles.labelcont}>
-          <Text style={styles.label}>{Location}</Text>
-        </View>
-        <Animated.Image
-          source={Hour}
-          style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
-        />
-        <Animated.Image
-          source={Minute}
-          style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
-        />
-        <View style={styles.detailscont}>
-          <Text style={styles.label}>
-            {dayName}, {analogTime}
-          </Text>
-          <Text style={styles.label}>{date}</Text>
-        </View>
-      </TouchableOpacity>
-      <Modal visible={showTimezone} animationType="slide">
-        <Timezone
-          tiz={TZ}
-          loc={Location}
-          setSelectedTimeZone={newTimeZone => setTimeZone(newTimeZone)}
-          setSelectedLocation={newLocation => setLocation(newLocation)}
-          cancel={setShowTimezone}
-        />
-      </Modal>
+      <Image source={Clockback} style={styles.img2} />
+      <View style={styles.labelcont}>
+        <Text style={styles.label}>{Location}</Text>
+      </View>
+      <Animated.Image
+        source={Hour}
+        style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
+      />
+      <Animated.Image
+        source={Minute}
+        style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
+      />
+      <View style={styles.detailscont}>
+        <Text style={styles.label}>
+          {dayName}, {analogTime}
+        </Text>
+        <Text style={styles.label}>{date}</Text>
+      </View>
     </View>
   );
 };
@@ -173,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WorldClock;
+export default Convertorclock;

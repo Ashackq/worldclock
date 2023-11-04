@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 //import { StyleSheet } from 'react-native';
 import {Home, Help, Tnc, About, Convertor} from './screens';
-import {Loading, Timezone} from './components';
+import {Loading} from './components';
 
 export type RootStackParamList = {
   Home: {
@@ -37,7 +37,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): JSX.Element {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Conv">
         <Stack.Group screenOptions={{headerShown: false, animation: 'fade'}}>
           <Stack.Screen name="Loading" component={Loading} />
           <Stack.Screen
