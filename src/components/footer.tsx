@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import {colors} from '../devdata/constants/lang';
+import { colors } from '../devdata/constants/lang';
 
-const Footer = ({navigation, route}) => {
+const Footer = ({ navigation, route }) => {
   const [activeIcon, setActiveIcon] = useState('Home');
   const i = 1;
 
@@ -18,16 +18,21 @@ const Footer = ({navigation, route}) => {
 
   const handleIconPress = (iconName: string) => {
     setActiveIcon(iconName);
-    let targetRoute = '';
+    // let targetRoute = '';
     if (iconName === 'Home') {
-      targetRoute = 'Home';
+      navigation.setParams({
+        conv: false,
+      });
+      // targetRoute = 'Home';
     } else if (iconName === 'Conv') {
-      targetRoute = 'Conv';
+      // targetRoute = 'Conv';
+      navigation.setParams({
+        conv: true,
+      });
     }
-
-    navigation.push(targetRoute, {
-      languageindex: i,
-    });
+    // navigation.push(targetRoute, {
+    //   languageindex: i,
+    // });
   };
 
   return (
@@ -36,12 +41,14 @@ const Footer = ({navigation, route}) => {
         <View style={styles.bottomBar1}>
           <TouchableOpacity
             onPress={() => handleIconPress('Home')}
-            style={[styles.bottomBarButton]}>
+            style={[styles.bottomBarButton]}
+          >
             <Text style={styles.aftertext}>Clocks</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => handleIconPress('Conv')}
-            style={[styles.bottomBarButton]}>
+            style={[styles.bottomBarButton]}
+          >
             <Text style={styles.aftertext}>Converter</Text>
           </TouchableOpacity>
         </View>

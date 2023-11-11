@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Image,
@@ -10,30 +9,51 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import {lang} from '../devdata/constants/languages';
+import { lang } from '../devdata/constants/languages';
 import Timezone from './timezone';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
-// const Second = require('../devdata/assets/second.png');
 const Minute = require('../devdata/assets/minutes.png');
 
-const WorldClock = props => {
+const WorldClock = (props) => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
   const i = 1;
-  const [TZ, setTimeZone] = useState('GMT + 00:00');
-  const [Location, setLocation] = useState('London');
+  const [TZ, setTimeZone] = useState(props.tz);
+  const [Location, setLocation] = useState(props.loc);
   const [dayName, setDayName] = useState('');
   const [analogTime, setAnalogTime] = useState('');
   const [date, setDate] = useState('');
   const [showTimezone, setShowTimezone] = useState(false);
-
+  const id = props.id;
   const openTimeZoneSelector = () => {
     setShowTimezone(true);
   };
-
-  const getTimeZoneOffset = Timebro => {
+  // const getProgressDataById = async (ids, settimeZone, setlocation) => {
+  //   try {
+  //     const data = await AsyncStorage.getItem('times');
+  //     const parsedData = data ? JSON.parse(data) : [];
+  //     const dataById = parsedData[ids];
+  //     if (dataById !== undefined) {
+  //       settimeZone(dataById.timezone);
+  //       setlocation(dataById.location);
+  //     } else {
+  //       console.warn(`Progress data with ID ${ids} not found.`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error getting progress data by ID:', error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     await getProgressDataById(props.id, setTimeZone, setLocation);
+  //   };
+  //   loadData();
+  //   return () => {};
+  // }, []);
+  const getTimeZoneOffset = (Timebro) => {
     const parts = Timebro.split(' ');
     const offsetString = parts[2];
     const [sign, hours, minutes] = offsetString.match(/([-+]?\d{2}):(\d{2})/);
@@ -49,7 +69,7 @@ const WorldClock = props => {
       useNativeDriver: false,
     }).start();
   };
-  const updateClock = Timebro => {
+  const updateClock = (Timebro) => {
     const now = new Date();
     const timeZoneOffset = getTimeZoneOffset(Timebro);
     now.setMinutes(now.getMinutes() + timeZoneOffset);
@@ -84,7 +104,7 @@ const WorldClock = props => {
     return () => {
       clearInterval(interval);
     };
-  }, [TZ]);
+  }, [TZ, updateClock]);
 
   const hourTransform = hourRotation.interpolate({
     inputRange: [1, 360],
@@ -107,11 +127,14 @@ const WorldClock = props => {
         </View>
         <Animated.Image
           source={Hour}
-          style={[styles.clockHand, {transform: [{rotate: hourTransform}]}]}
+          style={[styles.clockHand, { transform: [{ rotate: hourTransform }] }]}
         />
         <Animated.Image
           source={Minute}
-          style={[styles.clockHand, {transform: [{rotate: minuteTransform}]}]}
+          style={[
+            styles.clockHand,
+            { transform: [{ rotate: minuteTransform }] },
+          ]}
         />
         <View style={styles.detailscont}>
           <Text style={styles.label}>
@@ -122,10 +145,11 @@ const WorldClock = props => {
       </TouchableOpacity>
       <Modal visible={showTimezone} animationType="slide">
         <Timezone
+          id={id}
           tiz={TZ}
           loc={Location}
-          setSelectedTimeZone={newTimeZone => setTimeZone(newTimeZone)}
-          setSelectedLocation={newLocation => setLocation(newLocation)}
+          setSelectedTimeZone={(newTimeZone) => setTimeZone(newTimeZone)}
+          setSelectedLocation={(newLocation) => setLocation(newLocation)}
           cancel={setShowTimezone}
         />
       </Modal>
@@ -142,7 +166,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 50,
   },
-  container: {justifyContent: 'center', alignItems: 'center'},
+  container: { justifyContent: 'center', alignItems: 'center' },
   labelcont: {
     position: 'relative',
     top: -50,

@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,27 +7,45 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {timezonesData} from '../devdata/constants/lang';
+import { timezonesData } from '../devdata/constants/lang';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Timezone = ({
+  id,
   Tiz,
   loc,
   setSelectedTimeZone,
   setSelectedLocation,
   cancel,
 }) => {
+  const updateProgressData = async (index, newLocation, newTimezone) => {
+    try {
+      const existingData = await AsyncStorage.getItem('times');
+      const parsedExistingData = existingData ? JSON.parse(existingData) : [];
+      if (index >= 0 && index < parsedExistingData.length) {
+        parsedExistingData[index].location = newLocation;
+        parsedExistingData[index].timezone = newTimezone;
+        await AsyncStorage.setItem('times', JSON.stringify(parsedExistingData));
+      } else {
+        console.error('Invalid index provided.');
+      }
+    } catch (error) {
+      console.error('Error updating progress data:', error);
+    }
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTimezone, setSelectedTimezone] = useState({
     location: loc || 'London',
     timezone: Tiz || 'GMT + 00:00',
   });
 
-  const filteredTimezones = timezonesData.filter(timezone =>
-    timezone.location.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredTimezones = timezonesData.filter((timezone) =>
+    timezone.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleTimezoneSelect = timezone => {
+  const handleTimezoneSelect = (timezone) => {
     setSelectedTimezone(timezone);
+    calculateDSTTransition();
   };
 
   const calculateDSTTransition = () => {
@@ -36,7 +53,11 @@ const Timezone = ({
   };
 
   const setZone = () => {
-    calculateDSTTransition();
+    updateProgressData(
+      id,
+      selectedTimezone.location,
+      selectedTimezone.timezone
+    );
     setSelectedTimeZone(selectedTimezone.timezone);
     setSelectedLocation(selectedTimezone.location);
     cancel(false);
@@ -53,14 +74,15 @@ const Timezone = ({
         style={styles.searchInput}
         placeholder="Search Your City"
         value={searchQuery}
-        onChangeText={text => setSearchQuery(text)}
+        onChangeText={(text) => setSearchQuery(text)}
       />
       <ScrollView style={styles.selectWrapper}>
         {filteredTimezones.map((timezone, index) => (
           <Text
             key={index}
             style={styles.timezoneItem}
-            onPress={() => handleTimezoneSelect(timezone)}>
+            onPress={() => handleTimezoneSelect(timezone)}
+          >
             {timezone.location} - {timezone.timezone}
           </Text>
         ))}

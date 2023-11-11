@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '.';
@@ -10,8 +9,8 @@ const SetClock = ({
   onCancel,
 }) => {
   const [selectedTimezone] = useState({
-    location: initialLocation || 'London',
-    timezone: initialTimezone || 'GMT + 00:00',
+    location: initialLocation,
+    timezone: initialTimezone,
   });
   const [date, setDates] = useState(Date);
   const setDateTime = () => {

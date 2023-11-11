@@ -6,22 +6,12 @@ const Clockback = require('../devdata/assets/dial2.png');
 const Hour = require('../devdata/assets/hour.png');
 const Minute = require('../devdata/assets/minutes.png');
 
-const Convertorclock = (props) => {
+const Localclock = (props) => {
   const [hourRotation] = useState(new Animated.Value(0));
   const [minuteRotation] = useState(new Animated.Value(0));
-  const TZ = props.tz;
-  const Location = props.loc;
   const [dayName, setDayName] = useState('');
   const [analogTime, setAnalogTime] = useState('');
   const [date1, setDate1] = useState('');
-  const getTimeZoneOffset = (Timebro) => {
-    const parts = Timebro.split(' ');
-    const offsetString = parts[2];
-    const [sign, hours, minutes] = offsetString.match(/([-+]?\d{2}):(\d{2})/);
-    const totalOffset =
-      (parseInt(hours) * 60 + parseInt(minutes)) * (sign === '-' ? -1 : 1);
-    return totalOffset;
-  };
 
   const rotateClockHand = (hand, degrees) => {
     Animated.timing(hand, {
@@ -32,22 +22,20 @@ const Convertorclock = (props) => {
     }).start();
   };
 
-  const updateClock = (Timebro) => {
+  const updateClock = () => {
     const now = new Date(props.date);
-    const timeZoneOffset = getTimeZoneOffset(Timebro);
-    now.setMinutes(now.getMinutes() + timeZoneOffset);
-    const minutes = (now.getUTCMinutes() + now.getUTCSeconds() / 60) * 6;
-    const hours = ((now.getUTCHours() % 12) + now.getUTCMinutes() / 60) * 30;
+    const minutes = (now.getMinutes() + now.getSeconds() / 60) * 6;
+    const hours = ((now.getHours() % 12) + now.getMinutes() / 60) * 30;
 
     rotateClockHand(minuteRotation, minutes);
     rotateClockHand(hourRotation, hours);
 
-    const dayName1 = new Intl.DateTimeFormat(lang[1].code, {
+    const dayName1 = new Intl.DateTimeFormat(lang[0].code, {
       weekday: 'short',
     }).format(now);
 
-    const analogTime1 = `${now.getUTCHours().toString().padStart(2, '0')}:${now
-      .getUTCMinutes()
+    const analogTime1 = `${now.getHours().toString().padStart(2, '0')}:${now
+      .getMinutes()
       .toString()
       .padStart(2, '0')}`;
 
@@ -63,11 +51,11 @@ const Convertorclock = (props) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => updateClock(TZ), 1000);
+    const interval = setInterval(() => updateClock(), 1000);
     return () => {
       clearInterval(interval);
     };
-  }, [TZ, updateClock]);
+  }, [updateClock]);
 
   const hourTransform = hourRotation.interpolate({
     inputRange: [1, 360],
@@ -85,7 +73,7 @@ const Convertorclock = (props) => {
 
       <Image source={Clockback} style={styles.img2} />
       <View style={styles.labelcont}>
-        <Text style={styles.label}>{Location}</Text>
+        <Text style={styles.label}>Local</Text>
       </View>
       <Animated.Image
         source={Hour}
@@ -145,4 +133,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Convertorclock;
+export default Localclock;
