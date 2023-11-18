@@ -1,13 +1,16 @@
-/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet as Query,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { colors } from '../devdata/constants/lang';
+import StyleSheet from 'react-native-media-query';
 
 const Footer = ({ navigation, route }) => {
   const [activeIcon, setActiveIcon] = useState('Home');
-  const i = 1;
-
   useEffect(() => {
     if (route.name === 'Conv') {
       setActiveIcon('Conv');
@@ -30,9 +33,6 @@ const Footer = ({ navigation, route }) => {
         conv: true,
       });
     }
-    // navigation.push(targetRoute, {
-    //   languageindex: i,
-    // });
   };
 
   return (
@@ -64,7 +64,7 @@ const Footer = ({ navigation, route }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const { styles } = StyleSheet.create({
   container: {
     marginTop: -50,
     flex: 1,
@@ -103,10 +103,16 @@ const styles = StyleSheet.create({
     margin: 3,
     borderColor: 'white',
     borderWidth: 2,
-    left: 103,
+    left: 90,
+    '@media (min-width: 385px)': {
+      left: 103,
+    },
   },
   bottomBar2Active: {
-    left: 203,
+    left: 189,
+    '@media (min-width: 385px)': {
+      left: 203,
+    },
   },
   icon: {
     height: 25,

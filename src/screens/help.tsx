@@ -29,7 +29,7 @@ const Help = ({ navigation, route }: HomeProps) => {
         <Head name={lang[i].help} navigation={navigation} route={route} />
       </View>
       <ScrollView contentContainerStyle={styles.scontainer}>
-        <View style={styles.content}>
+        {/* <View style={styles.content}>
           <Text style={styles.header}>{lang[i].helphead}</Text>
 
           <Text style={styles.paragraph}>{lang[i].para1}</Text>
@@ -41,7 +41,7 @@ const Help = ({ navigation, route }: HomeProps) => {
           <Text style={styles.paragraph}>{lang[i].para4}</Text>
 
           <Text style={styles.paragraph}>{lang[i].para5}</Text>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

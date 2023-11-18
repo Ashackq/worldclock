@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-const Editback = require('../devdata/assets/editback.jpg');
+// const Editback = require('../devdata/assets/editback.jpg');
 import { Head } from '../components';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
@@ -16,7 +16,7 @@ import { env } from '../devdata/constants/lang';
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'About'>;
 
 const About = ({ navigation, route }: HomeProps) => {
-  const i = route.params.languageindex;
+  const i = 0;
   const openLinkedInProfile = () => {
     const linkedInURL = 'https://in.linkedin.com/in/akash-patel-8a6107237';
     Linking.openURL(linkedInURL);

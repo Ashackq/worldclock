@@ -178,6 +178,8 @@ const styles = StyleSheet.create({
   clocksContainer: {
     alignItems: 'center',
     marginTop: 80,
+    margin: 10,
+    marginLeft: 50,
   },
   clocksRow: {
     flexDirection: 'row',

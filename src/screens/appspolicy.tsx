@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 import { Head } from '../components';
@@ -9,7 +8,7 @@ import { lang } from '../devdata/constants/languages';
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Tnc'>;
 
 const AppPolicy = ({ navigation, route }: HomeProps) => {
-  const i = route.params.languageindex;
+  const i = 0;
 
   return (
     <View style={styles.container}>
@@ -17,7 +16,7 @@ const AppPolicy = ({ navigation, route }: HomeProps) => {
         <Head name={lang[i].appshead} navigation={navigation} route={route} />
       </View>
       <ScrollView contentContainerStyle={styles.scontainer}>
-        <View style={styles.content}>
+        {/* <View style={styles.content}>
           <Text style={styles.paragraph}>{lang[i].appspara1}</Text>
 
           <Text style={styles.paragraph}>{lang[i].appspare2}</Text>
@@ -33,7 +32,7 @@ const AppPolicy = ({ navigation, route }: HomeProps) => {
           <Text style={styles.paragraph}>{lang[i].appspara7}</Text>
 
           <Text style={styles.paragraph}>{lang[i].appspara8}</Text>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );

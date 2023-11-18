@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   selectWrapper: {
     width: '80%',
-    maxHeight: 40,
+    maxHeight: 120,
     borderWidth: 1,
     borderColor: 'gray',
   },
